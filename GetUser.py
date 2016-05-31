@@ -19,7 +19,7 @@ def PutInfo(json,json2,datab):
  
 UserQueue = Queue.Queue(maxsize = 0)
 
-f=open("id_4.txt","r")
+f=open("id.txt","r")
 dic={}
 for line in f:
     line=line.strip('\n')
@@ -27,6 +27,8 @@ for line in f:
         dic[line]=1
         UserQueue.put(line)
 f.close()
+
+
 
 DB=database()
 
