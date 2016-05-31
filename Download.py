@@ -25,15 +25,21 @@ class Downloads:
             list_info.append(json2["data"])
         else:
             list_info.append(0)
-        s = "%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'"%(list_info[0],list_info[1],list_info[2],list_info[3],list_info[4],list_info[5],list_info[6],list_info[7],list_info[8],attention)
-        fr.write(s)
+        s = "%s %s %s %s %s %s %s %s %s %s"%(list_info[0],list_info[1],list_info[2],list_info[3],list_info[4],list_info[5],list_info[6],list_info[7],list_info[8],attention)
+        s=s.replace("\n","")      
+        s=s+"\n"        
+        print s.encode('utf-8')         
+        fr.write(s.encode('utf-8'))
         list_info=[]    
     
     @staticmethod
     def Putin(line,ft):
         list_info=[line['season_id'],line['title'],line['brief'],line['favorites'],line['is_finish']]
-        s="'%s' '%s' '%s' '%s' '%s')"%(list_info[0],list_info[1],list_info[2],list_info[3],list_info[4])
-        ft.write(s)
+        s="%s %s %s %s %s"%(list_info[0],list_info[1],list_info[2],list_info[3],list_info[4])
+        s=s.replace("\n","")      
+        s=s+"\n"
+        print s.encode('utf-8')          
+        ft.write(s.encode('utf-8'))
         list_info=[]  
 
 if __name__=="__main__":
@@ -47,9 +53,10 @@ if __name__=="__main__":
             d.UserQueue.put(line)
     f.close()
     
-    fr=open('user.txt','a')
-    ft=open('fanju.txt','a')
+    
     while not d.UserQueue.empty():
+        fr=open('user.txt','a')
+        ft=open('fanju.txt','a')
         print "Queue: "+str(d.UserQueue.qsize())+"  dic: "+str(len(d.dic_user))
         id_number=d.UserQueue.get()
         try:
@@ -98,7 +105,7 @@ if __name__=="__main__":
                     d.dic_fanju[line['season_id']]=1
                     d.Putin(line,ft)
         print "番剧:  "+str(len(d.dic_fanju))
-    fr.close()
-    ft.close()
+        fr.close()
+        ft.close()
     
     
