@@ -83,22 +83,33 @@ if __name__=="__main__":
                 d.UserQueue.put(i)
                 
         d.PutInfo(json,json2,fr,attention)        
-        
-        html=requests.get("http://space.bilibili.com/ajax/friend/GetFansList?mid=%s"%id_number)
+        try:
+            html=requests.get("http://space.bilibili.com/ajax/friend/GetFansList?mid=%s"%id_number)
+        except:
+            pass
         json3=html.json()
         for page in xrange(min(json3['data']['pages'],5)):
-            html=requests.get("http://space.bilibili.com/ajax/friend/GetFansList?mid=%s&page=%d"%(id_number,page))
+            try:
+                html=requests.get("http://space.bilibili.com/ajax/friend/GetFansList?mid=%s&page=%d"%(id_number,page))
+            except:
+                pass
             json_t=html.json()
             for line in json_t['data']['list']:
                 mm=line['fid']
                 if not d.dic_user.has_key(mm):
                     d.dic_user[mm]=1
                     d.UserQueue.put(mm)
-               
-        html=requests.get("http://space.bilibili.com/ajax/Bangumi/getList?mid=%s"%id_number)
+        
+        try:
+            html=requests.get("http://space.bilibili.com/ajax/Bangumi/getList?mid=%s"%id_number)
+        except:
+            pass
         json4=html.json()
         for page in xrange(json4['data']['pages']):
-            html=requests.get("http://space.bilibili.com/ajax/Bangumi/getList?mid=%s&page=%d"%(id_number,page))
+            try:
+                html=requests.get("http://space.bilibili.com/ajax/Bangumi/getList?mid=%s&page=%d"%(id_number,page))
+            except:
+                pass
             json_t=html.json()
             for line in json_t['data']['result']:
                 if not d.dic_fanju.has_key(line['season_id']):
