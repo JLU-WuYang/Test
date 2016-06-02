@@ -22,7 +22,7 @@ class getJson(threading.Thread):
         
         while True:
             try:
-                print "id : "+str(id_queue.qsize())
+                
                 user_id=self.id_queue.get(block=False)
                 self.write_queue.put(user_id)
                 html=requests.get("http://space.bilibili.com/ajax/member/GetInfo?mid=%s"%user_id)
@@ -40,7 +40,7 @@ class dealJson(threading.Thread):
         self.dic=dic
     def run(self):
          while True:
-             print len(dic)
+             print "dic: "+str(len(self.dic))+" write_queue: "+str(self.write_queue.qsize())
              try:
                  json=self.json_queue.get(block=False)
                  attention_list=json['data']['attentions']
@@ -72,14 +72,14 @@ class writeUser(threading.Thread):
     def run(self):
         while True:
             try:
-                time.sleep(1)
+                time.sleep(0.5)
                 
                 id_number=self.write_queue.get(block=False)
                 html=requests.get("http://space.bilibili.com/ajax/member/GetInfo?mid=%s"%id_number)
                 json=html.json()
                 html2=requests.get("http://space.bilibili.com/ajax/live/getLive?mid=%s"%id_number)
                 json2=html2.json()
-                print "write_queue: "+str(self.write_queue.qsize())
+                
                 lis=[json["data"]["mid"],json['data']['name'],json['data']['sex'],json['data']['birthday'],json['data']['sign'],json['data']['place'],json['data']['fans'],json['data']['attention']]
                 if json2['status']:        
                     lis.append(json2["data"])
@@ -122,10 +122,10 @@ if __name__=="__main__":
     id_queue.put(17580215)
     thread=[]
     
-    for i in  xrange(3):
+    for i in  xrange(5):
        s=getJson(id_queue,write_queue,json_queue)
        thread.append(s)
-    for i in xrange(5):
+    for i in xrange(6):
        c=dealJson(id_queue,write_queue,json_queue,dic)
        thread.append(c)
     for i in xrange(10):
